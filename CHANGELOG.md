@@ -7,6 +7,8 @@ still taking shape; the minor number goes up for new features, the patch number 
 
 ## [Unreleased]
 
+- Weather workflow: `actions/checkout@v7` (runs on Node 24; v4 used the retired Node 20)
+
 ## [0.1.0] - 2026-10-29
 
 First public version.

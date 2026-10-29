@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7   # v5+ run on Node 24 (v4 used the retired Node 20)
       - name: Sync weather_hourly
         run: python3 jobs/fetch_weather.py --sync   # standard library only, no installs
         env:
