@@ -1,0 +1,10 @@
+{
+  "name": "mould-detect-dashboard",
+  "private": true,
+  "description": "Static site, no build step and no dependencies; this file only enables ES modules and the test command.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "serve": "python3 serve.py 8000"
+  }
+}

@@ -1,0 +1,73 @@
+# Build output
+*.elf
+*.bin
+*.hex
+*.map
+*.o
+*.d
+*.lst
+*.su
+build/
+
+# ESP-IDF
+sdkconfig.old
+managed_components/
+dependencies.lock
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Web dashboard (later)
+node_modules/
+
+# Credentials: commit only *secrets.example.h, .env.example and dashboard/config.example.js
+dashboard/config.js
+*secrets.h
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Supabase CLI local state
+supabase/.branches/
+supabase/.temp/
+
+# Datasheets - cite sections in the README instead of committing them
+datasheets/
+
+# Recorded sensor data from the house and trained models: kept local.
+# Data files are ignored everywhere; synthetic samples go in analysis/samples/.
+data/
+!dashboard/src/data/
+models/
+*.csv
+*.parquet
+*.feather
+*.sqlite
+*.db
+*.pkl
+*.joblib
+!analysis/samples/*.csv
+
+# Photos of the home (phone formats carry GPS location in EXIF): kept local
+room_pics/
+*.[jJ][pP][gG]
+*.[jJ][pP][eE][gG]
+*.[hH][eE][iI][cC]
+!docs/images/*.jpg
+
+# Serial logs: contain the Wi-Fi network name, MAC addresses and local IPs
+*.log
+
+# Editor / macOS
+.vscode/
+.cache/
+compile_commands.json
+.DS_Store

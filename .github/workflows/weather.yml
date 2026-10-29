@@ -1,0 +1,32 @@
+# Keeps weather_hourly complete around the clock: every hour GitHub runs the same sync as dashboard/serve.py
+# (jobs/fetch_weather.py --sync: fill missing hours from Open-Meteo, up to 92 days back, plus the 2-day forecast).
+# Settings come from the repository's Actions secrets, never from the code. The log is public on a public
+# repository: the script prints only counts and dates, never the location or keys. A run fails (and GitHub sends an
+# e-mail) when hours are still missing afterwards.
+name: weather sync
+
+on:
+  schedule:
+    - cron: "17 * * * *"   # hourly at :17 (top-of-hour runs are delayed most); GitHub may still start a run late
+  workflow_dispatch:       # "Run workflow" button for a manual sync
+
+permissions:
+  contents: read
+
+concurrency:
+  group: weather-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync weather_hourly
+        run: python3 jobs/fetch_weather.py --sync   # standard library only, no installs
+        env:
+          LATITUDE: ${{ secrets.LATITUDE }}
+          LONGITUDE: ${{ secrets.LONGITUDE }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API Traffic</title>
+<style>
+  :root { --bg: #fafaf8; --fg: #1d1d1b; --muted: #6b6b66; --line: #e2e2dc; --card: #ffffff;
+          --rate: #2f6db5; --p50: #2f7d32; --p99: #c62828; --err: #c62828; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #161615; --fg: #ececea; --muted: #9a9a94; --line: #2c2c2a;
+          --card: #1e1e1c; --rate: #6ea8ff; --p50: #66bb6a; --p99: #ef5350; --err: #ef5350; } }
+  body { background: var(--bg); color: var(--fg); font: 15px/1.45 system-ui, sans-serif; margin: 0 auto;
+         max-width: 1040px; padding: 16px; }
+  h1 { font-size: 20px; margin: 0 0 4px; } h2 { font-size: 15px; margin: 22px 0 6px; }
+  .meta { color: var(--muted); font-size: 13px; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 14px; }
+  .tile { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+  .tile b { display: block; font-size: 24px; font-variant-numeric: tabular-nums; }
+  .tile span { color: var(--muted); font-size: 12px; }
+  .bad b { color: var(--err); }
+  svg { width: 100%; height: 160px; background: var(--card); border: 1px solid var(--line); border-radius: 8px; }
+  .legend { font-size: 12px; color: var(--muted); } .legend i { display: inline-block; width: 10px; height: 3px;
+            vertical-align: middle; margin: 0 4px 0 10px; }
+  table { border-collapse: collapse; font-size: 14px; } td, th { padding: 4px 12px 4px 0; text-align: left; }
+  details { margin-top: 22px; color: var(--muted); } details p { max-width: 48em; }
+</style>
+</head>
+<body>
+<h1>API traffic</h1>
+<p class="meta">Live view of this API process: last 10 s for the tiles, last 60 s for the charts; updates every
+second; resets when the API restarts. The page's own polling is not counted. <span id="state"></span></p>
+
+<div class="tiles">
+  <div class="tile"><b id="rps">–</b><span>requests / s (traffic)</span></div>
+  <div class="tile" id="err-tile"><b id="err">–</b><span>5xx errors (errors)</span></div>
+  <div class="tile"><b id="p50">–</b><span>p50 latency, ms</span></div>
+  <div class="tile"><b id="p95">–</b><span>p95 latency, ms</span></div>
+  <div class="tile"><b id="p99">–</b><span>p99 latency, ms</span></div>
+  <div class="tile"><b id="inflight">–</b><span>in flight now (saturation)</span></div>
+  <div class="tile" id="shed-tile"><b id="shed">–</b><span>shed with 503 since start</span></div>
+</div>
+
+<h2>Requests per second <span class="legend"><i style="background:var(--rate)"></i>all
+  <i style="background:var(--err)"></i>5xx</span></h2>
+<svg id="rate-chart" viewBox="0 0 600 160" preserveAspectRatio="none" role="img" aria-label="requests per second"></svg>
+
+<h2>Latency per second, ms <span class="legend"><i style="background:var(--p50)"></i>p50
+  <i style="background:var(--p99)"></i>p99</span></h2>
+<svg id="lat-chart" viewBox="0 0 600 160" preserveAspectRatio="none" role="img" aria-label="latency"></svg>
+
+<h2>Status codes, last 10 s</h2>
+<table id="codes"><tr><td class="meta">no requests yet</td></tr></table>
+
+<details><summary>How to read this</summary>
+<p><b>Requests / s, errors, latency, in flight</b> are the four golden signals (traffic, errors, latency,
+saturation). <b>p50</b> is the typical request; <b>p99</b> is the slowest 1 % — it rises first when the server starts
+to queue. When requests arrive faster than they are answered, <b>in flight</b> climbs to the limit
+(--max-in-flight) and further requests are <b>shed</b> with 503 at once instead of waiting until they time out.
+Prometheus reads the same counters from <code>/metrics</code>.</p>
+</details>
+<script src="/traffic.js"></script>
+</body>
+</html>

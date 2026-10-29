@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mould Detect</title>
+  <meta name="description" content="Live 3D view of a room's climate: temperature, humidity, CO₂, weather and mould risk.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uplot@1.6.31/dist/uPlot.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="scene" class="scene" aria-label="3D model of the room. Use the tags or the tiles to open details."></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true"></span>
+      <div>
+        <h1>Mould Detect</h1>
+        <p id="room-name" class="muted">Room</p>
+      </div>
+    </div>
+    <div class="status-bar">
+      <span id="source-badge" class="badge">…</span>
+      <span class="live"><i id="live-dot" class="dot"></i><span id="updated">Connecting…</span></span>
+      <button id="sign-out" class="link-button" type="button" hidden>Sign out</button>
+    </div>
+  </header>
+
+  <section id="tiles" class="tiles" aria-label="Current conditions"></section>
+
+  <aside id="panel" class="panel" aria-hidden="true" aria-labelledby="panel-title">
+    <header class="panel-head">
+      <div>
+        <h2 id="panel-title"></h2>
+        <p id="panel-subtitle" class="muted"></p>
+      </div>
+      <button id="panel-close" class="icon-button" type="button" aria-label="Close">✕</button>
+    </header>
+    <div class="range" role="group" aria-label="Time range">
+      <button type="button" data-range="6h">6 h</button>
+      <button type="button" data-range="24h" aria-pressed="true">24 h</button>
+      <button type="button" data-range="7d">7 days</button>
+    </div>
+    <div id="panel-body" class="panel-body"></div>
+  </aside>
+
+  <p class="hint">Drag to look around · click the door, windows, glass, radiator or couch to play · the desk computer (or R) replays the last 24 h</p>
+
+  <div id="login" class="overlay" hidden>
+    <form id="login-form" class="login-card">
+      <h2>Sign in</h2>
+      <p class="muted">The live data is private. <a href="?demo">View the demo</a> instead.</p>
+      <label>Email <input id="login-email" type="email" autocomplete="username" required></label>
+      <label>Password <input id="login-password" type="password" autocomplete="current-password" required></label>
+      <button type="submit" class="primary">Sign in</button>
+      <p id="login-error" class="error" role="alert"></p>
+    </form>
+  </div>
+
+  <script>
+    // Start-up errors (a module that fails to load, a stale cached file) show in the status line instead of a silent
+    // "Connecting…"; main.js reports its own errors the same way.
+    window.showStartupError = (msg) => {
+      const el = document.getElementById('updated');
+      if (el) el.textContent = `Error: ${msg} — try Cmd+Shift+R, or see the browser console`;
+    };
+    addEventListener('error', (e) => window.showStartupError(e.message || 'a script failed to load'));
+    addEventListener('unhandledrejection', (e) => window.showStartupError(e.reason?.message || String(e.reason)));
+  </script>
+  <script type="module" src="src/main.js" onerror="showStartupError('src/main.js or one of its modules could not be loaded')"></script>
+</body>
+</html>

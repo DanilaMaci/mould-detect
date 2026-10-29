@@ -1,0 +1,10 @@
+// Cloudflare Workers deploy config for the public demo: serve dashboard/ as static files (no server code, no build
+// step). Without config.js the dashboard runs on synthetic demo data. Deploy command (Cloudflare dashboard → the
+// Worker → Settings → Build): npx wrangler@4.150.0 deploy
+{
+  "name": "mould-detect", // must match the Worker's name in the Cloudflare dashboard
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dashboard"
+  }
+}

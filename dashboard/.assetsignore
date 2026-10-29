@@ -1,0 +1,10 @@
+# Files Cloudflare (wrangler deploy) must not serve. config.js holds the live keys and the location: it stays off the
+# public site even when deploying from a machine where it exists. The rest is local tooling.
+config.js
+serve.py
+__pycache__/
+tests/
+package.json
+README.md
+.DS_Store
+.claude/
